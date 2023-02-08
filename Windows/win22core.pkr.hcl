@@ -8,16 +8,6 @@ variable "disk_size" {
   default = "50000"
 }
 
-variable "disk_type_id" {
-  type    = string
-  default = "1"
-}
-
-variable "headless" {
-  type    = string
-  default = "true"
-}
-
 variable "iso_checksum" {
   type    = string
   default = "sha256:4f1457c4fe14ce48c9b2324924f33ca4f0470475e6da851b39ccbf98f44e7852"
@@ -28,24 +18,14 @@ variable "iso_url" {
   default = "https://software-download.microsoft.com/download/sg/20348.169.210806-2348.fe_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso"
 }
 
-variable "manually_download_iso_from" {
-  type    = string
-  default = "https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2022"
-}
-
-variable "memory" {
+variable "memsize" {
   type    = string
   default = "2048"
 }
 
-variable "cpus" {
+variable "numvcpus" {
   type    = string
   default = "1"
-}
-
-variable "vm_name" {
-  type    = string
-  default = "WindowsServer2022Core"
 }
 
 variable "virtio_win_iso" {
@@ -68,18 +48,28 @@ variable "winrm_password" {
   default = "Packer"
 }
 
+variable "vm_name" {
+  type    = string
+  default = "WindowsServer2022Core"
+}
+
+variable "vm_version" {
+  type    = string
+  default = "0.1"
+}
+
 source "qemu" "win22core" {
   accelerator      = "kvm"
   boot_wait        = "0s"
   communicator     = "winrm"
-  cpus             = var.cpus
+  cpus             = var.numvcpus
   disk_size        = var.disk_size
   floppy_files     = ["${var.autounattend}", "./scripts/disable-screensaver.ps1", "./scripts/disable-winrm.ps1", "./scripts/enable-winrm.ps1"]
-  headless         = var.headless
+  headless         = true
   iso_checksum     = var.iso_checksum
   iso_url          = var.iso_url
-  memory           = var.memory
-  output_directory = "win22-core"
+  memory           = var.memsize
+  output_directory = "artifacts/${var.vm_name}_${var.vm_version}"
   qemuargs         = [["-drive", "file=win22-core/{{ .Name }},if=virtio,cache=writeback,discard=ignore,format=qcow2,index=1"], ["-drive", "file=${var.iso_url},media=cdrom,index=2"], ["-drive", "file=${var.virtio_win_iso},media=cdrom,index=3"]]
   shutdown_command = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
   vm_name          = var.vm_name
