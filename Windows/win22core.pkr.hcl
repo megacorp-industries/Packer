@@ -25,8 +25,7 @@ variable "iso_checksum" {
 
 variable "iso_url" {
   type    = string
-  #default = "https://software-download.microsoft.com/download/sg/20348.169.210806-2348.fe_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso"
-  default = "./win22.iso"
+  default = "https://software-download.microsoft.com/download/sg/20348.169.210806-2348.fe_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso"
 }
 
 variable "manually_download_iso_from" {
@@ -59,24 +58,34 @@ variable "winrm_timeout" {
   default = "6h"
 }
 
+variable "winrm_username" {
+  type    = string
+  default = "Packer"
+}
+
+variable "winrm_password" {
+  type    = string
+  default = "Packer"
+}
+
 source "qemu" "win22core" {
   accelerator      = "kvm"
   boot_wait        = "0s"
   communicator     = "winrm"
-  cpus             = "${var.cpus}"
-  disk_size        = "${var.disk_size}"
+  cpus             = var.cpus
+  disk_size        = var.disk_size
   floppy_files     = ["${var.autounattend}", "./scripts/disable-screensaver.ps1", "./scripts/disable-winrm.ps1", "./scripts/enable-winrm.ps1"]
-  headless         = "${var.headless}"
-  iso_checksum     = "${var.iso_checksum}"
-  iso_url          = "${var.iso_url}"
-  memory           = "${var.memory}"
+  headless         = var.headless
+  iso_checksum     = var.iso_checksum
+  iso_url          = var.iso_url
+  memory           = var.memory
   output_directory = "win22-core"
   qemuargs         = [["-drive", "file=win22-core/{{ .Name }},if=virtio,cache=writeback,discard=ignore,format=qcow2,index=1"], ["-drive", "file=${var.iso_url},media=cdrom,index=2"], ["-drive", "file=${var.virtio_win_iso},media=cdrom,index=3"]]
   shutdown_command = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
-  vm_name          = "${var.vm_name}"
-  winrm_password   = "changeme"
-  winrm_timeout    = "${var.winrm_timeout}"
-  winrm_username   = "Dedsec"
+  vm_name          = var.vm_name
+  winrm_password   = var.winrm_password
+  winrm_timeout    = var.winrm_timeout
+  winrm_username   = var.winrm_username
 }
 
 build {

@@ -124,7 +124,7 @@
                     <WillShowUI>OnError</WillShowUI>
                 </ProductKey>
                 <AcceptEula>true</AcceptEula>
-                <FullName>Dedsec</FullName>
+                <FullName>User</FullName>
                 <Organization>Megacorp</Organization>
             </UserData>
         </component>
@@ -156,11 +156,11 @@
         <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <AutoLogon>
                 <Password>
-                    <Value>changeme</Value>
+                    <Value>packer</Value>
                     <PlainText>true</PlainText>
                 </Password>
                 <Enabled>true</Enabled>
-                <Username>Dedsec</Username>
+                <Username>packer</Username>
             </AutoLogon>
             <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
@@ -213,9 +213,9 @@
                 </SynchronousCommand>
                 -->
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c wmic useraccount where "name='Dedsec'" set PasswordExpires=FALSE</CommandLine>
+                    <CommandLine>cmd.exe /c wmic useraccount where "name='Packer'" set PasswordExpires=FALSE</CommandLine>
                     <Order>10</Order>
-                    <Description>Disable password expiration for User Dedsec</Description>
+                    <Description>Disable password expiration for user Packer</Description>
                 </SynchronousCommand>
                 <!-- WITHOUT WINDOWS UPDATES -->
                 <SynchronousCommand wcm:action="add">
@@ -257,19 +257,19 @@
             </OOBE>
             <UserAccounts>
                 <AdministratorPassword>
-                    <Value>changeme</Value>
+                    <Value>Packer</Value>
                     <PlainText>true</PlainText>
                 </AdministratorPassword>
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
                         <Password>
-                            <Value>changeme</Value>
+                            <Value>Packer</Value>
                             <PlainText>true</PlainText>
                         </Password>
                         <Group>administrators</Group>
-                        <DisplayName>Dedsec</DisplayName>
-                        <Name>Dedsec</Name>
-                        <Description>User Dedsec</Description>
+                        <DisplayName>Packer</DisplayName>
+                        <Name>Packer</Name>
+                        <Description>User Packer</Description>
                     </LocalAccount>
                 </LocalAccounts>
             </UserAccounts>
