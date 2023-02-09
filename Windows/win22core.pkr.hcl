@@ -20,12 +20,12 @@ variable "iso_url" {
 
 variable "memsize" {
   type    = string
-  default = "2048"
+  default = "4096"
 }
 
 variable "numvcpus" {
   type    = string
-  default = "1"
+  default = "2"
 }
 
 variable "virtio_win_iso" {
@@ -65,12 +65,12 @@ source "qemu" "win22core" {
   cpus             = var.numvcpus
   disk_size        = var.disk_size
   floppy_files     = ["${var.autounattend}", "./scripts/disable-screensaver.ps1", "./scripts/disable-winrm.ps1", "./scripts/enable-winrm.ps1"]
-  headless         = true
+  headless         = false
   iso_checksum     = var.iso_checksum
   iso_url          = var.iso_url
   memory           = var.memsize
   output_directory = "artifacts/${var.vm_name}_${var.vm_version}"
-  qemuargs         = [["-drive", "file=win22-core/{{ .Name }},if=virtio,cache=writeback,discard=ignore,format=qcow2,index=1"], ["-drive", "file=${var.iso_url},media=cdrom,index=2"], ["-drive", "file=${var.virtio_win_iso},media=cdrom,index=3"]]
+  qemuargs         = [["-drive", "file=artifacts/${var.vm_name}_${var.vm_version}/{{ .Name }},if=virtio,cache=writeback,discard=ignore,format=qcow2,index=1"], ["-drive", "file=${var.iso_url},media=cdrom,index=2"], ["-drive", "file=${var.virtio_win_iso},media=cdrom,index=3"]]
   shutdown_command = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
   vm_name          = var.vm_name
   winrm_password   = var.winrm_password
