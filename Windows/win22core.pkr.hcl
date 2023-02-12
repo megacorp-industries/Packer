@@ -65,7 +65,7 @@ source "qemu" "win22core" {
   cpus             = var.numvcpus
   disk_size        = var.disk_size
   floppy_files     = ["${var.autounattend}", "./scripts/disable-screensaver.ps1", "./scripts/disable-winrm.ps1", "./scripts/enable-winrm.ps1"]
-  headless         = false
+  headless         = true
   iso_checksum     = var.iso_checksum
   iso_url          = var.iso_url
   memory           = var.memsize
