@@ -5,7 +5,7 @@ variable "boot_wait" {
 
 variable "disk_size" {
   type    = string
-  default = "20000"
+  default = "50000"
 }
 
 variable "iso_checksum" {
