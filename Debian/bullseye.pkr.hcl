@@ -67,19 +67,43 @@ source "qemu" "bullseye" {
   iso_checksum           = var.iso_checksum
   iso_url                = var.iso_url
   net_device             = "virtio-net"
-  output_directory       = "artifacts/${var.vm_name}_${var.vm_version}"
+  output_directory       = "qemu-artifacts/${var.vm_name}_${var.vm_version}"
   qemu_binary            = "/usr/bin/qemu-system-x86_64"
   qemuargs               = [["-m", "${var.memsize}M"], ["-smp", "${var.numvcpus}"]]
   shutdown_command       = "echo 'packer' | sudo -S shutdown -P now"
   ssh_handshake_attempts = 500
   ssh_password           = var.ssh_password
-  ssh_timeout            = "45m"
+  ssh_timeout            = "4h"
   ssh_username           = var.ssh_username
-  ssh_wait_timeout       = "45m"
+  ssh_wait_timeout       = "4h"
+}
+
+source "hyperv-iso" "bullseye" {
+  boot_command           = ["<esc><wait1>auto preseed/url=http://{{ .HTTPIP  }}:{{ .HTTPPort  }}/preseed.cfg<enter>"]
+  boot_wait             = "3s"
+  communicator          = "ssh"
+  disk_block_size       = "1"
+  disk_size             = "${var.disk_size}"
+  enable_dynamic_memory = "true"
+  enable_secure_boot    = false
+  generation            = 2
+  guest_additions_mode  = "disable"
+  http_directory        = "http"
+  iso_checksum          = var.iso_checksum
+  iso_url               = var.iso_url
+  memory                = var.memsize
+  cpus                  = var.numvcpus
+  output_directory      = "hyperv-artifacts/${var.vm_name}_${var.vm_version}"
+  shutdown_command      = "echo 'password' | sudo -S shutdown -P now"
+  shutdown_timeout      = "30m"
+  ssh_password          = var.ssh_password
+  ssh_timeout           = "4h"
+  ssh_username          = var.ssh_username
+  vm_name               = var.vm_name
 }
 
 build {
-  sources = ["source.qemu.bullseye"]
+  sources = ["source.qemu.bullseye", "source.hyperv-iso.bullseye"]
 
   provisioner "shell" {
     execute_command = "echo 'packer'|{{ .Vars }} sudo -S -E bash '{{ .Path }}'"
