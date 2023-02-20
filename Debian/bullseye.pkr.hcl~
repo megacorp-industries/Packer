@@ -80,15 +80,19 @@ source "qemu" "bullseye" {
 
 source "hyperv-iso" "bullseye" {
   boot_command           = ["<esc><wait1>auto preseed/url=http://{{ .HTTPIP  }}:{{ .HTTPPort  }}/preseed.cfg<enter>"]
-  boot_wait             = "10s"
+  boot_wait             = "3s"
   communicator          = "ssh"
   disk_block_size       = "1"
   disk_size             = "${var.disk_size}"
   enable_dynamic_memory = "true"
   enable_secure_boot    = false
-  generation            = 1
+  generation            = 2
   guest_additions_mode  = "disable"
-  http_directory        = "http"
+  host_port_max          = 2229
+  host_port_min          = 2222
+  http_directory         = "http"
+  http_port_max          = 10089
+  http_port_min          = 10082
   iso_checksum          = var.iso_checksum
   iso_url               = var.iso_url
   memory                = var.memsize
