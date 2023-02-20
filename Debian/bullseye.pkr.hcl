@@ -101,7 +101,7 @@ source "hyperv-iso" "bullseye" {
   ssh_timeout           = "4h"
   ssh_username          = var.ssh_username
   vm_name               = var.vm_name
-  headless              = false
+  headless              = true
 }
 
 build {
